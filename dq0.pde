@@ -264,10 +264,3 @@ void draw() {
     plot(o, DQ0_START, oColor, false);
   }
 }
-
-boolean isNaN(float f) {
-  if (f > 0 || f < 0 || f == 0) {
-    return false;
-  }
-  return true;
-}
