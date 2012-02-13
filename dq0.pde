@@ -83,7 +83,7 @@ final float f = 50.0;
 final float w = 2 * PI * f;        // system angular speed
 float theta = 0.0;
 
-final float Ts = 0.00005;
+final float Ts = 0.00001;
 final float totalTime = 0.040;
 final int ITERATIONS = int(totalTime / Ts);
 
@@ -215,13 +215,13 @@ void draw() {
     }
     else if (harmonicSeq == 0) {
       harmonicColour = zeroColor;
-    } 
+    }
 
     drawPhasors(harmonicMag, harmonicPhase, PHASORS_START_X, PHASORS_START_Y + 470, harmonicColour, false);
 
     // compute input waveforms at each time-step
     for (int t = 0; t < ITERATIONS; t++) {
-      theta = w*(float(t) * Ts);
+      theta = w * (float(t) * Ts);
 
       Va[t] = posMag*sin(theta + posPhase) + negMag*sin(theta + negPhase) + zeroMag*sin(theta + zeroPhase) + harmonic(theta, 0);
       Vb[t] = posMag*sin(NEG_TWO_PI_OVER_THREE + theta + posPhase) + negMag*sin(TWO_PI_OVER_THREE + theta + negPhase) + zeroMag*sin(theta + zeroPhase) + harmonic(theta, 1);
