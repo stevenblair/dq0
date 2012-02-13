@@ -83,7 +83,7 @@ final float f = 50.0;
 final float w = 2 * PI * f;        // system angular speed
 float theta = 0.0;
 
-final float Ts = 0.00001;
+final float Ts = 0.00002;
 final float totalTime = 0.040;
 final int ITERATIONS = int(totalTime / Ts);
 
