@@ -1,5 +1,5 @@
-Info - Visualisation of dq0 transform
--------------------------------------
+Visualisation of dq0 transform
+------------------------------
 
 This tool plots the dq0 transform for a specified input waveform. The three-phase input can be specified in terms of positive, negative, and zero sequence magnitudes and phases. It's also possible to add a harmonic of specified number, sequence, magnitude, and phase.
 
