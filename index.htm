@@ -1,0 +1,477 @@
+<html>
+	<head>
+		<title>Visualisation of dq0 transform</title>
+		<link type="text/css" href="css/vader/jquery-ui-1.8.14.custom.css" rel="Stylesheet" />
+		<noscript>
+		This page requires JavaScript.
+		</noscript>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-21122920-1']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+		<script src="js/processing-1.3.6.min.js"></script>
+		<script src="js/jquery-1.7.1.min.js"></script>
+		<script src="js/jquery-ui-1.8.14.custom.min.js"></script>
+		<script type="text/javascript">
+		/**
+		 * Visualisation of dq0 transform
+		 *
+		 * Copyright (c) 2012 Steven Blair
+		 *
+		 * Permission is hereby granted, free of charge, to any person obtaining a copy
+		 * of this software and associated documentation files (the "Software"), to deal
+		 * in the Software without restriction, including without limitation the rights
+		 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+		 * copies of the Software, and to permit persons to whom the Software is
+		 * furnished to do so, subject to the following conditions:
+		 *
+		 * The above copyright notice and this permission notice shall be included in
+		 * all copies or substantial portions of the Software.
+		 *
+		 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+		 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+		 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+		 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+		 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+		 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+		 * THE SOFTWARE.
+		 */
+
+		Processing.data = {};
+		resetData();
+		
+		$(function() {
+			$("#pos-mag").slider({
+				value: Processing.data.posMag,
+				range: "min",
+				min: 0.0,
+				max: 1.0,
+				step: 0.01,
+				orientation: "vertical",
+				slide: function(event, ui) {
+					Processing.data.posMag = ui.value;
+					updateLabels();
+				}
+			});
+			$("#pos-phase").slider({
+				value: Processing.data.posPhase,
+				range: "min",
+				min: -180.0,
+				max: 180.0,
+				step: 0.1,
+				orientation: "horizontal",
+				slide: function(event, ui) {
+					Processing.data.posPhase = ui.value;
+					updateLabels();
+				}
+			});
+			$("#neg-mag").slider({
+				value: Processing.data.negMag,
+				range: "min",
+				min: 0.0,
+				max: 1.0,
+				step: 0.01,
+				orientation: "vertical",
+				slide: function(event, ui) {
+					Processing.data.negMag = ui.value;
+					updateLabels();
+				}
+			});
+			$("#neg-phase").slider({
+				value: Processing.data.negPhase,
+				range: "min",
+				min: -180.0,
+				max: 180.0,
+				step: 0.1,
+				orientation: "horizontal",
+				slide: function(event, ui) {
+					Processing.data.negPhase = ui.value;
+					updateLabels();
+				}
+			});
+			$("#zero-mag").slider({
+				value: Processing.data.zeroMag,
+				range: "min",
+				min: 0.0,
+				max: 1.0,
+				step: 0.01,
+				orientation: "vertical",
+				slide: function(event, ui) {
+					Processing.data.zeroMag = ui.value;
+					updateLabels();
+				}
+			});
+			$("#zero-phase").slider({
+				value: Processing.data.zeroPhase,
+				range: "min",
+				min: -180.0,
+				max: 180.0,
+				step: 0.1,
+				orientation: "horizontal",
+				slide: function(event, ui) {
+					Processing.data.zeroPhase = ui.value;
+					updateLabels();
+				}
+			});
+
+			$("#harmonic-number").slider({
+				value: Processing.data.harmonicNumber,
+				range: "min",
+				min: 1.0,
+				max: 15.0,
+				step: 1.0,
+				orientation: "horizontal",
+				slide: function(event, ui) {
+					Processing.data.harmonicNumber = ui.value;
+					updateLabels();
+				}
+			});
+			$("#harmonic-seq").buttonset();
+			$("#harmonic-mag").slider({
+				value: Processing.data.harmonicMag,
+				range: "min",
+				min: 0.0,
+				max: 1.0,
+				step: 0.01,
+				orientation: "vertical",
+				slide: function(event, ui) {
+					Processing.data.harmonicMag = ui.value;
+					updateLabels();
+				}
+			});
+			$("#harmonic-phase").slider({
+				value: Processing.data.harmonicPhase,
+				range: "min",
+				min: -180.0,
+				max: 180.0,
+				step: 0.1,
+				orientation: "horizontal",
+				slide: function(event, ui) {
+					Processing.data.harmonicPhase = ui.value;
+					updateLabels();
+				}
+			});
+
+			$(".ui-slider").each(function() {
+				$(this).bind("slide", function(event, ui) {
+					Processing.data.change = true;
+				})
+			});
+
+			$("#dq0-type").buttonset();
+
+			$("#reset-button").button().click(function() {
+				reset();
+			});
+
+			$("#info-button").button();
+
+			$("#harmonic-seq").click(function() {
+				if ($("#pos").is(":checked")) {
+					Processing.data.harmonicSeq = 1;
+				}
+				else if ($("#neg").is(":checked")) {
+					Processing.data.harmonicSeq = 2;
+				}
+				else if ($("#zero").is(":checked")) {
+					Processing.data.harmonicSeq = 0;
+				}
+
+				updateLabels();
+				Processing.data.change = true;
+			});
+
+			$("#dq0-type").click(function() {
+				if ($("#MATLAB").is(":checked")) {
+					Processing.data.dq0Type = 0;
+				}
+				else if ($("#classic").is(":checked")) {
+					Processing.data.dq0Type = 1;
+				}
+				else if ($("#Wikipedia").is(":checked")) {
+					Processing.data.dq0Type = 2;
+				}
+
+				updateLabels();
+				Processing.data.change = true;
+			});
+
+			$("#info-button").mouseenter(function() {
+				var leftPos = $("#info-button").width() + $("#info-button").offset().left + 15;
+				var topPos = $("#info-button").offset().top + $("#info-button").height() - $("#info").height();
+				$("#info").css({"left" : leftPos + "px", "top" : topPos + "px"});
+				$("#info").fadeIn();
+			});
+
+			$("#info").mouseenter(function() {
+				$("#info").stop(true);
+				$("#info").fadeTo(50, 1.0);
+			});
+
+			$("#info, #info-button").mouseleave(function() {
+				$("#info").delay(500).fadeOut();
+			});
+		});
+
+
+		function updateLabels() {
+			$("#pos-label").html("pos seq: " + Processing.data.posMag + " &#8736; " + Processing.data.posPhase + "&deg;");
+			$("#neg-label").html("neg seq: " + Processing.data.negMag + " &#8736; " + Processing.data.negPhase + "&deg;");
+			$("#zero-label").html("zero seq: " + Processing.data.zeroMag + " &#8736; " + Processing.data.zeroPhase + "&deg;");
+			$("#harmonic-number-label").html("harmonic number: " + Processing.data.harmonicNumber);
+			$("#harmonic-mag-angle-label").html("harmonic: " + Processing.data.harmonicMag + " &#8736; " + Processing.data.harmonicPhase + "&deg;");
+		}
+
+		function setAllSliders() {
+			$("#pos-mag").slider("value", Processing.data.posMag);
+			$("#pos-phase").slider("value", Processing.data.posPhase);
+			$("#neg-mag").slider("value", Processing.data.negMag);
+			$("#neg-phase").slider("value", Processing.data.negPhase);
+			$("#zero-mag").slider("value", Processing.data.zeroMag);
+			$("#zero-phase").slider("value", Processing.data.zeroPhase);
+			$("#harmonic-number").slider("value", Processing.data.harmonicNumber);
+			$("#harmonic-mag").slider("value", Processing.data.harmonicMag);
+			$("#harmonic-phase").slider("value", Processing.data.harmonicPhase);
+
+			if (Processing.data.harmonicSeq == 0) {
+				$("#zero").attr('checked', true).button("refresh");
+			}
+			else if (Processing.data.harmonicSeq == 1) {
+				$("#pos").attr('checked', true).button("refresh");
+			}
+			else if (Processing.data.harmonicSeq == 2) {
+				$("#neg").attr('checked', true).button("refresh");
+			}
+
+			if (Processing.data.dq0Type == 0) {
+				$("#MATLAB").attr('checked', true).button("refresh");
+			}
+			else if (Processing.data.dq0Type == 1) {
+				$("#classic").attr('checked', true).button("refresh");
+			}
+			else if (Processing.data.dq0Type == 2) {
+				$("#Wikipedia").attr('checked', true).button("refresh");
+			}
+
+			Processing.data.change = true;
+
+			updateLabels();
+		}
+
+		function resetData() {
+			Processing.data = {
+				posMag: 1.0,
+				posPhase: 0.0,
+				negMag: 0.0,
+				negPhase: 0.0,
+				zeroMag: 0.0,
+				zeroPhase: 0.0,
+				harmonicNumber: 3,
+				harmonicSeq: 1,
+				harmonicMag: 0.0,
+				harmonicPhase: 0.0,
+				dq0Type: 0,
+				change: true
+			};
+		}
+
+		function reset() {
+			resetData();
+			setAllSliders();
+		}
+		</script>
+		<style>
+			body {
+				 background-color: #000000;
+				 font-family: sans-serif;
+			}
+			div {
+				/*height: 2em;*/
+				color: #FFFFFF;
+				font-size: 0.75em;
+				clear: left;
+			}
+			div.controls {
+				/*width: 800px;*/
+			}
+			div.controls span {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			div.controls span.horizontal {
+				width: 130px;
+				float: left;
+				margin: 10px;
+			}
+			div.controls span.vertical {
+				height: 80px;
+				float: left;
+				margin: 10px;
+
+			}
+			td {
+				vertical-align: top;
+			}
+
+			a {
+				font-weight:bold;
+				color:#0699C4;
+				text-decoration: none;
+			}
+			a:hover, a:active {
+				color:#003652;
+			}
+
+			#dq0Canvas {
+				position: absolute;
+				left: 250px;
+				top: 0px;
+				z-index: -25;
+			}
+
+			div.label {
+				/*position: absolute;*/
+				font-size: 1.5em;
+				text-align: left;
+				font-family: courier;
+				font-weight: bold;
+				margin-left: 5px;
+			}
+
+			/*#time-range-label {
+				position: absolute;
+				left: 45px;
+				top: 185px;
+				color: #B42126;
+			}
+			#current-range-label {
+				position: absolute;
+				left: 45px;
+				top: 285px;
+				color: #E26366;
+			}*/
+
+			#toolbar {
+				/*position: absolute;
+				left: 10px;
+				top: 310px;
+				height: 175px;*/
+				padding: 5px;
+				margin-left: 10px;
+				width: 220px;
+			}
+			#toolbar button {
+				margin: 2px;
+				font-size: 0.9em;
+			}
+			#dq0-type, #harmonic-seq {
+				padding: 2px;
+				font-size: 0.8em;
+				/*font-size: 1em;*/
+			}
+			#reset-button {
+				top: 0px;
+			}
+			#info-button {
+				top: 8px;
+			}
+
+			/*.ui-effects-transfer { border: 2px solid #C8C8C8; }*/
+			#info {
+				/*padding: 0.4em;
+				left: 180px;
+				top: 350px;
+				padding: 5px;*/
+				/*height: 175px;*/
+				position: absolute;
+				display: none;
+				width: 500px;
+			}
+			#info p {font-size: 1.0em; margin: 0.5em;}
+			#info h3 {font-size: 1.1em; margin: 0; padding: 0.4em; text-align: center;}
+
+			div.spacer {padding: 20px;}
+		</style>
+	</head>
+	<body>
+		<div id="toolbar" class="ui-widget-content ui-corner-all">
+	 		<!--<div class="controls" id="time-range">
+	 			<div class="label" id="time-range-label"></div>
+				<span class="vertical" id="slider-time-range" title="time range"></span>
+			</div>
+	 		<div class="controls" id="current-range">
+	 			<div class="label" id="current-range-label"></div>
+				<span class="horizontal" id="slider-current-range" title="current range"></span>
+			</div>
+			<div class="spacer">
+			</div>-->
+	 		<div class="controls" id="pos-control" title="positive sequence magnitude and angle">
+	 			<div class="label" id="pos-label"></div>
+				<span class="vertical" id="pos-mag"></span>
+				<span class="horizontal" id="pos-phase"></span>
+			</div>
+	 		<div class="controls" id="neg-control" title="negative sequence magnitude and angle">
+	 			<div class="label" id="neg-label"></div>
+				<span class="vertical" id="neg-mag"></span>
+				<span class="horizontal" id="neg-phase"></span>
+			</div>
+	 		<div class="controls" id="zero-control" title="zero sequence magnitude and angle">
+	 			<div class="label" id="zero-label"></div>
+				<span class="vertical" id="zero-mag"></span>
+				<span class="horizontal" id="zero-phase"></span>
+			</div>
+			<div class="spacer">
+			</div>
+	 		<div class="controls" id="harmonic-number-control" title="harmonic number">
+	 			<div class="label" id="harmonic-number-label"></div>
+				<span class="horizontal" id="harmonic-number"></span>
+			</div>
+			<div id="harmonic-seq">
+				<input type="radio" id="pos" name="harmonic-seq-radio" checked="checked" /><label for="pos" title="">pos</label>
+				<input type="radio" id="neg" name="harmonic-seq-radio" /><label for="neg" title="">neg</label>
+				<input type="radio" id="zero" name="harmonic-seq-radio" /><label for="zero" title="">zero</label>
+			</div>
+	 		<div class="controls" id="harmonic-mag-angle" title="harmonic magnitude and angle">
+	 			<div class="label" id="harmonic-mag-angle-label"></div>
+				<span class="vertical" id="harmonic-mag"></span>
+				<span class="horizontal" id="harmonic-phase"></span>
+			</div>
+			<div class="spacer">
+			</div>
+			<div id="dq0-type" title="dq0 transformation type">
+				<input type="radio" id="MATLAB" name="dq0-type-radio" checked="checked" /><label for="MATLAB" title="">MATLAB</label>
+				<input type="radio" id="classic" name="dq0-type-radio" /><label for="classic" title="">&quot;classic&quot;</label>
+				<input type="radio" id="Wikipedia" name="dq0-type-radio" /><label for="Wikipedia" title="">Wikipedia</label>
+			</div>
+			<p>
+			<button id="reset-button" title="reset to default values">reset</button><br />
+			<button id="info-button">info</button>
+			</p>
+		</div>
+
+		<div id="info" class="ui-widget-content ui-corner-all">
+			<h3 class="ui-widget-header ui-corner-all">Info - Visualisation of dq0 transform</h3>
+			<p>
+				This tool plots the dq0 transform for a specified input waveform. The three-phase input can be specified in terms of positive, negative, and zero sequence magnitudes and phases. It's also possible to add a harmonic of specified number, sequence, magnitude, and phase.
+			</p>
+			<p>
+				There are three variants of the dq0 transform: MATLAB SimPowerSystems version, the "classic" version, and Wikipedia's version.
+			</p>
+			<p>
+				This uses <a href="http://processingjs.org/">processing.js</a>, and requires an HTML5 browser, and does not work in Internet Explorer. The source code is <a href="https://github.com/stevenblair/dq0">here</a>.
+			</p>
+			<p>
+				Return to <a href="http://personal.strath.ac.uk/steven.m.blair">main page</a>.
+			</p>
+		</div>
+
+		<canvas id="dq0Canvas" datasrc="dq0.pde" width="900" height="700"></canvas>
+	</body>
+</html>
