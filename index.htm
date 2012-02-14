@@ -354,9 +354,9 @@
 			}
 
 			div.label {
-				font-size: 1.5em;
+				font-size: 1.8em;
 				text-align: left;
-				font-family: courier;
+				font-family: monospace;
 				font-weight: bold;
 				margin-left: 5px;
 			}
@@ -365,12 +365,13 @@
 			.negColour, #neg-mag .ui-slider-range, #neg-phase .ui-slider-range { background: #E26396; }
 			.zeroColour, #zero-mag .ui-slider-range, #zero-phase .ui-slider-range { background: #E2E2E2; }
 
-			#toolbar {
+			.toolbar {
 				padding: 5px;
 				margin-left: 10px;
-				width: 220px;
+				margin-bottom: 10px;
+				width: 205px;
 			}
-			#toolbar button {
+			.toolbar button {
 				margin: 2px;
 				font-size: 0.9em;
 			}
@@ -393,11 +394,11 @@
 			#info p {font-size: 1.0em; margin: 0.5em;}
 			#info h3 {font-size: 1.1em; margin: 0; padding: 0.4em; text-align: center;}
 
-			div.spacer {padding: 20px;}
+			div.spacer {padding: 0px;}
 		</style>
 	</head>
 	<body>
-		<div id="toolbar" class="ui-widget-content ui-corner-all">
+		<div class="toolbar ui-widget-content ui-corner-all">
 	 		<div class="controls" id="pos-control" title="positive sequence magnitude and angle">
 	 			<div class="label" id="pos-label"></div>
 				<span class="vertical" id="pos-mag"></span>
@@ -415,6 +416,8 @@
 			</div>
 			<div class="spacer">
 			</div>
+		</div>
+		<div class="toolbar ui-widget-content ui-corner-all">
 	 		<div class="controls" id="harmonic-number-control" title="harmonic number">
 	 			<div class="label" id="harmonic-number-label"></div>
 				<span class="horizontal" id="harmonic-number"></span>
@@ -429,8 +432,8 @@
 				<input type="radio" id="neg" name="harmonic-seq-radio" /><label for="neg" title="">neg</label>
 				<input type="radio" id="zero" name="harmonic-seq-radio" /><label for="zero" title="">zero</label>
 			</div>
-			<div class="spacer">
-			</div>
+		</div>
+		<div class="toolbar ui-widget-content ui-corner-all">
 			<div id="dq0-type" title="dq0/Park transformation type">
 				<input type="radio" id="MATLAB" name="dq0-type-radio" checked="checked" /><label for="MATLAB" title="">MATLAB</label>
 				<input type="radio" id="classic" name="dq0-type-radio" /><label for="classic" title="">&quot;classic&quot;</label>

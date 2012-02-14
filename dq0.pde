@@ -259,6 +259,7 @@ void draw() {
     text("q", WAVEFORMS_LABEL_X + 15, DQ0_START + 4);
     fill(oColor);
     text("0", WAVEFORMS_LABEL_X + 30, DQ0_START + 4);
+    fill(white);
     plot(d, DQ0_START, dColor, true);
     plot(q, DQ0_START, qColor, false);
     plot(o, DQ0_START, oColor, false);
