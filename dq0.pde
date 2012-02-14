@@ -25,7 +25,7 @@
 final int MAX_WIDTH = 750;
 final int MAX_HEIGHT = 650;
 final int X_START = 250;
-final int PHASORS_START_Y = 80;
+final int PHASORS_START_Y = 85;
 final int PHASORS_START_X = 70;
 final int PHASOR_HEIGHT = 50;
 final int PHASOR_LINE_WIDTH = 3;
@@ -202,8 +202,8 @@ void draw() {
     fill(white);
 
     drawPhasors(posMag, posPhase, PHASORS_START_X, PHASORS_START_Y, posColor, false);
-    drawPhasors(negMag, negPhase, PHASORS_START_X, PHASORS_START_Y + 130, negColor, false);
-    drawPhasors(zeroMag, zeroPhase, PHASORS_START_X, PHASORS_START_Y + 260, zeroColor, true);
+    drawPhasors(negMag, negPhase, PHASORS_START_X, PHASORS_START_Y + 125, negColor, false);
+    drawPhasors(zeroMag, zeroPhase, PHASORS_START_X, PHASORS_START_Y + 250, zeroColor, true);
 
     color harmonicColour;
 
@@ -217,7 +217,7 @@ void draw() {
       harmonicColour = zeroColor;
     }
 
-    drawPhasors(harmonicMag, harmonicPhase, PHASORS_START_X, PHASORS_START_Y + 470, harmonicColour, false);
+    drawPhasors(harmonicMag, harmonicPhase, PHASORS_START_X, PHASORS_START_Y + 450, harmonicColour, false);
 
     // compute input waveforms at each time-step
     for (int t = 0; t < ITERATIONS; t++) {

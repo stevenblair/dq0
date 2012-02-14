@@ -176,12 +176,15 @@
 			$("#harmonic-seq").click(function() {
 				if ($("#pos").is(":checked")) {
 					Processing.data.harmonicSeq = 1;
+					setPosColour();
 				}
 				else if ($("#neg").is(":checked")) {
 					Processing.data.harmonicSeq = 2;
+					setNegColour();
 				}
 				else if ($("#zero").is(":checked")) {
 					Processing.data.harmonicSeq = 0;
+					setZeroColour();
 				}
 
 				updateLabels();
@@ -226,7 +229,19 @@
 			$("#neg-label").html("neg seq: " + Processing.data.negMag + " &#8736; " + Processing.data.negPhase + "&deg;");
 			$("#zero-label").html("zero seq: " + Processing.data.zeroMag + " &#8736; " + Processing.data.zeroPhase + "&deg;");
 			$("#harmonic-number-label").html("harmonic number: " + Processing.data.harmonicNumber);
-			$("#harmonic-mag-angle-label").html("harmonic: " + Processing.data.harmonicMag + " &#8736; " + Processing.data.harmonicPhase + "&deg;");
+			$("#harmonic-mag-phase-label").html("harmonic: " + Processing.data.harmonicMag + " &#8736; " + Processing.data.harmonicPhase + "&deg;");
+		}
+
+		function setZeroColour() {
+			$("#harmonic-mag .ui-slider-range, #harmonic-phase .ui-slider-range").removeClass("posColour").removeClass("negColour").addClass("zeroColour");
+		}
+
+		function setPosColour() {
+			$("#harmonic-mag .ui-slider-range, #harmonic-phase .ui-slider-range").removeClass("zeroColour").removeClass("negColour").addClass("posColour");
+		}
+
+		function setNegColour() {
+			$("#harmonic-mag .ui-slider-range, #harmonic-phase .ui-slider-range").removeClass("zeroColour").removeClass("posColour").addClass("negColour");
 		}
 
 		function setAllSliders() {
@@ -242,12 +257,15 @@
 
 			if (Processing.data.harmonicSeq == 0) {
 				$("#zero").attr('checked', true).button("refresh");
+				setZeroColour();
 			}
 			else if (Processing.data.harmonicSeq == 1) {
 				$("#pos").attr('checked', true).button("refresh");
+				setPosColour();
 			}
 			else if (Processing.data.harmonicSeq == 2) {
 				$("#neg").attr('checked', true).button("refresh");
+				setNegColour();
 			}
 
 			if (Processing.data.dq0Type == 0) {
@@ -293,7 +311,6 @@
 				 font-family: sans-serif;
 			}
 			div {
-				/*height: 2em;*/
 				color: #FFFFFF;
 				font-size: 0.75em;
 				clear: left;
@@ -337,7 +354,6 @@
 			}
 
 			div.label {
-				/*position: absolute;*/
 				font-size: 1.5em;
 				text-align: left;
 				font-family: courier;
@@ -345,24 +361,11 @@
 				margin-left: 5px;
 			}
 
-			/*#time-range-label {
-				position: absolute;
-				left: 45px;
-				top: 185px;
-				color: #B42126;
-			}
-			#current-range-label {
-				position: absolute;
-				left: 45px;
-				top: 285px;
-				color: #E26366;
-			}*/
+			.posColour, #pos-mag .ui-slider-range, #pos-phase .ui-slider-range { background: #E26366; }
+			.negColour, #neg-mag .ui-slider-range, #neg-phase .ui-slider-range { background: #E26396; }
+			.zeroColour, #zero-mag .ui-slider-range, #zero-phase .ui-slider-range { background: #E2E2E2; }
 
 			#toolbar {
-				/*position: absolute;
-				left: 10px;
-				top: 310px;
-				height: 175px;*/
 				padding: 5px;
 				margin-left: 10px;
 				width: 220px;
@@ -374,7 +377,6 @@
 			#dq0-type, #harmonic-seq {
 				padding: 2px;
 				font-size: 0.8em;
-				/*font-size: 1em;*/
 			}
 			#reset-button {
 				top: 0px;
@@ -383,13 +385,7 @@
 				top: 8px;
 			}
 
-			/*.ui-effects-transfer { border: 2px solid #C8C8C8; }*/
 			#info {
-				/*padding: 0.4em;
-				left: 180px;
-				top: 350px;
-				padding: 5px;*/
-				/*height: 175px;*/
 				position: absolute;
 				display: none;
 				width: 500px;
@@ -402,20 +398,10 @@
 	</head>
 	<body>
 		<div id="toolbar" class="ui-widget-content ui-corner-all">
-	 		<!--<div class="controls" id="time-range">
-	 			<div class="label" id="time-range-label"></div>
-				<span class="vertical" id="slider-time-range" title="time range"></span>
-			</div>
-	 		<div class="controls" id="current-range">
-	 			<div class="label" id="current-range-label"></div>
-				<span class="horizontal" id="slider-current-range" title="current range"></span>
-			</div>
-			<div class="spacer">
-			</div>-->
 	 		<div class="controls" id="pos-control" title="positive sequence magnitude and angle">
 	 			<div class="label" id="pos-label"></div>
 				<span class="vertical" id="pos-mag"></span>
-				<span class="horizontal" id="pos-phase"></span>
+				<span class="horizontal posColour" id="pos-phase"></span>
 			</div>
 	 		<div class="controls" id="neg-control" title="negative sequence magnitude and angle">
 	 			<div class="label" id="neg-label"></div>
@@ -433,19 +419,19 @@
 	 			<div class="label" id="harmonic-number-label"></div>
 				<span class="horizontal" id="harmonic-number"></span>
 			</div>
-			<div id="harmonic-seq">
+	 		<div class="controls" id="harmonic-mag-phase" title="harmonic magnitude and angle">
+	 			<div class="label" id="harmonic-mag-phase-label"></div>
+				<span class="vertical" id="harmonic-mag"></span>
+				<span class="horizontal" id="harmonic-phase"></span>
+			</div>
+			<div id="harmonic-seq" title="sequence of harmonic">
 				<input type="radio" id="pos" name="harmonic-seq-radio" checked="checked" /><label for="pos" title="">pos</label>
 				<input type="radio" id="neg" name="harmonic-seq-radio" /><label for="neg" title="">neg</label>
 				<input type="radio" id="zero" name="harmonic-seq-radio" /><label for="zero" title="">zero</label>
 			</div>
-	 		<div class="controls" id="harmonic-mag-angle" title="harmonic magnitude and angle">
-	 			<div class="label" id="harmonic-mag-angle-label"></div>
-				<span class="vertical" id="harmonic-mag"></span>
-				<span class="horizontal" id="harmonic-phase"></span>
-			</div>
 			<div class="spacer">
 			</div>
-			<div id="dq0-type" title="dq0 transformation type">
+			<div id="dq0-type" title="dq0/Park transformation type">
 				<input type="radio" id="MATLAB" name="dq0-type-radio" checked="checked" /><label for="MATLAB" title="">MATLAB</label>
 				<input type="radio" id="classic" name="dq0-type-radio" /><label for="classic" title="">&quot;classic&quot;</label>
 				<input type="radio" id="Wikipedia" name="dq0-type-radio" /><label for="Wikipedia" title="">Wikipedia</label>
