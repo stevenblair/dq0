@@ -65,7 +65,7 @@
 				range: "min",
 				min: -180.0,
 				max: 180.0,
-				step: 0.1,
+				step: 0.01,
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.posPhase = ui.value;
@@ -89,7 +89,7 @@
 				range: "min",
 				min: -180.0,
 				max: 180.0,
-				step: 0.1,
+				step: 0.01,
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.negPhase = ui.value;
@@ -113,7 +113,7 @@
 				range: "min",
 				min: -180.0,
 				max: 180.0,
-				step: 0.1,
+				step: 0.01,
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.zeroPhase = ui.value;
@@ -151,10 +151,22 @@
 				range: "min",
 				min: -180.0,
 				max: 180.0,
-				step: 0.1,
+				step: 0.01,
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.harmonicPhase = ui.value;
+					updateLabels();
+				}
+			});
+			$("#theta").slider({
+				value: Processing.data.theta,
+				range: "min",
+				min: -180.0,
+				max: 180.0,
+				step: 0.01,
+				orientation: "horizontal",
+				slide: function(event, ui) {
+					Processing.data.theta = ui.value;
 					updateLabels();
 				}
 			});
@@ -166,6 +178,7 @@
 			});
 
 			$("#dq0-type").buttonset();
+			$("#theta-type").buttonset();
 
 			$("#reset-button").button().click(function() {
 				reset();
@@ -206,6 +219,20 @@
 				Processing.data.change = true;
 			});
 
+			$("#theta-type").click(function() {
+				if ($("#rotating").is(":checked")) {
+					Processing.data.thetaType = 0;
+					hideTheta();
+				}
+				else if ($("#fixed").is(":checked")) {
+					Processing.data.thetaType = 1;
+					showTheta();
+				}
+
+				updateLabels();
+				Processing.data.change = true;
+			});
+
 			$("#info-button").mouseenter(function() {
 				var leftPos = $("#info-button").width() + $("#info-button").offset().left + 15;
 				var topPos = $("#info-button").offset().top + $("#info-button").height() - $("#info").height();
@@ -230,6 +257,7 @@
 			$("#zero-label").html("zero seq: " + Processing.data.zeroMag + " &#8736; " + Processing.data.zeroPhase + "&deg;");
 			$("#harmonic-number-label").html("harmonic number: " + Processing.data.harmonicNumber);
 			$("#harmonic-mag-phase-label").html("harmonic: " + Processing.data.harmonicMag + " &#8736; " + Processing.data.harmonicPhase + "&deg;");
+			$("#theta-label").html("&theta;: " + Processing.data.theta + "&deg;");
 		}
 
 		function setZeroColour() {
@@ -254,6 +282,7 @@
 			$("#harmonic-number").slider("value", Processing.data.harmonicNumber);
 			$("#harmonic-mag").slider("value", Processing.data.harmonicMag);
 			$("#harmonic-phase").slider("value", Processing.data.harmonicPhase);
+			$("#theta").slider("value", Processing.data.theta);
 
 			if (Processing.data.harmonicSeq == 0) {
 				$("#zero").attr('checked', true).button("refresh");
@@ -278,6 +307,15 @@
 				$("#Wikipedia").attr('checked', true).button("refresh");
 			}
 
+			if (Processing.data.thetaType == 0) {
+				$("#rotating").attr('checked', true).button("refresh");
+				hideTheta();
+			}
+			else if (Processing.data.thetaType == 1) {
+				$("#fixed").attr('checked', true).button("refresh");
+				showTheta();
+			}
+
 			Processing.data.change = true;
 
 			updateLabels();
@@ -296,8 +334,18 @@
 				harmonicMag: 0.0,
 				harmonicPhase: 0.0,
 				dq0Type: 0,
+				thetaType: 0,
+				theta: 0,
 				change: true
 			};
+		}
+
+		function showTheta() {
+			$("#theta-control").slideDown("100");
+		}
+
+		function hideTheta() {
+			$("#theta-control").slideUp("100");
 		}
 
 		function reset() {
@@ -375,14 +423,18 @@
 				margin: 2px;
 				font-size: 0.9em;
 			}
-			#dq0-type, #harmonic-seq {
+			#dq0-type, #harmonic-seq, #theta-type {
 				padding: 2px;
 				font-size: 0.8em;
+			}
+			#theta-control {
+				display: none;
 			}
 			#reset-button {
 				top: 0px;
 			}
 			#info-button {
+				margin-top: 12px;
 				top: 8px;
 			}
 
@@ -434,6 +486,14 @@
 			</div>
 		</div>
 		<div class="toolbar ui-widget-content ui-corner-all">
+			<div id="theta-type" title="source of theta reference for transform: rotating (&theta;=&omega;t), or a fixed angle">
+				<input type="radio" id="rotating" name="theta-type-radio" checked="checked" /><label for="rotating" title="">rotating</label>
+				<input type="radio" id="fixed" name="theta-type-radio" /><label for="fixed" title="">fixed</label>
+			</div>
+	 		<div class="controls" id="theta-control" title="value of theta">
+	 			<div class="label" id="theta-label"></div>
+				<span class="horizontal" id="theta"></span>
+			</div>
 			<div id="dq0-type" title="dq0/Park transformation type">
 				<input type="radio" id="MATLAB" name="dq0-type-radio" checked="checked" /><label for="MATLAB" title="">MATLAB</label>
 				<input type="radio" id="classic" name="dq0-type-radio" /><label for="classic" title="">&quot;classic&quot;</label>

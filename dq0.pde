@@ -78,10 +78,12 @@ int harmonicSeq;
 float harmonicMag;
 float harmonicPhase;
 int dq0Type;
+int thetaType;
+float thetaFixed;
 
 final float f = 50.0;
 final float w = 2 * PI * f;        // system angular speed
-float theta = 0.0;
+float theta = 0;
 
 final float Ts = 0.00002;
 final float totalTime = 0.040;
@@ -108,6 +110,8 @@ void updateValues() {
   harmonicMag = Processing.data.harmonicMag;
   harmonicPhase = Processing.data.harmonicPhase * PI / 180.0;
   dq0Type = Processing.data.dq0Type;
+  thetaType = Processing.data.thetaType;
+  thetaFixed = Processing.data.theta * PI / 180.0;
 }
 
 float harmonic(float wt, int phaseNumber) {
@@ -227,6 +231,10 @@ void draw() {
       Va[t] = posMag*sin(theta + posPhase) + negMag*sin(theta + negPhase) + zeroMag*sin(theta + zeroPhase) + harmonic(theta, 0);
       Vb[t] = posMag*sin(NEG_TWO_PI_OVER_THREE + theta + posPhase) + negMag*sin(TWO_PI_OVER_THREE + theta + negPhase) + zeroMag*sin(theta + zeroPhase) + harmonic(theta, 1);
       Vc[t] = posMag*sin(TWO_PI_OVER_THREE + theta + posPhase) + negMag*sin(NEG_TWO_PI_OVER_THREE + theta + negPhase) + zeroMag*sin(theta + zeroPhase) + harmonic(theta, 2);
+
+      if (thetaType > 0) {
+        theta = thetaFixed;
+      }
 
       if (dq0Type == 0) {
         d[t] = (2.0 / 3.0) * (Va[t] * sin(theta) + Vb[t] * sin(theta - TWO_PI_OVER_THREE) + Vc[t] * sin(theta + TWO_PI_OVER_THREE));
