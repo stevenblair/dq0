@@ -157,6 +157,7 @@ void plot(float[] data, int startY, int colour, boolean drawAxis) {
     line(WAVEFORMS_START_X, startY - ONE_PU_HEIGHT - 20, WAVEFORMS_START_X, startY + ONE_PU_HEIGHT + 20); // y-axis
     text("0.0", WAVEFORMS_START_X - 35, startY + 4);
     text("1.0", WAVEFORMS_START_X - 35, startY - ONE_PU_HEIGHT + 4);
+    text("-1.0", WAVEFORMS_START_X - 35, startY + ONE_PU_HEIGHT + 4);
   }
 
   // draw waveform
