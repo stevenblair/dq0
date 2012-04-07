@@ -58,7 +58,6 @@
 				orientation: "vertical",
 				slide: function(event, ui) {
 					Processing.data.posMag = ui.value;
-					Processing.data.change = true;
 				}
 			});
 			$("#pos-phase").slider({
@@ -70,7 +69,6 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.posPhase = ui.value;
-					Processing.data.change = true;
 				}
 			});
 			$("#neg-mag").slider({
@@ -82,7 +80,6 @@
 				orientation: "vertical",
 				slide: function(event, ui) {
 					Processing.data.negMag = ui.value;
-					Processing.data.change = true;
 				}
 			});
 			$("#neg-phase").slider({
@@ -94,7 +91,6 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.negPhase = ui.value;
-					Processing.data.change = true;
 				}
 			});
 			$("#zero-mag").slider({
@@ -106,7 +102,6 @@
 				orientation: "vertical",
 				slide: function(event, ui) {
 					Processing.data.zeroMag = ui.value;
-					Processing.data.change = true;
 				}
 			});
 			$("#zero-phase").slider({
@@ -118,7 +113,6 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.zeroPhase = ui.value;
-					Processing.data.change = true;
 				}
 			});
 
@@ -131,7 +125,6 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.harmonicNumber = ui.value;
-					Processing.data.change = true;
 				}
 			});
 			$("#harmonic-seq").buttonset();
@@ -144,7 +137,6 @@
 				orientation: "vertical",
 				slide: function(event, ui) {
 					Processing.data.harmonicMag = ui.value;
-					Processing.data.change = true;
 				}
 			});
 			$("#harmonic-phase").slider({
@@ -156,7 +148,6 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.harmonicPhase = ui.value;
-					Processing.data.change = true;
 				}
 			});
 			$("#theta").slider({
@@ -168,8 +159,13 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.theta = ui.value;
-					Processing.data.change = true;
 				}
+			});
+
+			$(".ui-slider").each(function() {
+				$(this).bind("slide", function(event, ui) {
+					Processing.data.change = true;
+				})
 			});
 
 			function sign(delta) {
