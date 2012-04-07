@@ -130,14 +130,9 @@
 				step: 1.0,
 				orientation: "horizontal",
 				slide: function(event, ui) {
-					console.log("in harmonicNumber slide callback, value: ", ui.value);
 					Processing.data.harmonicNumber = ui.value;
 					updateLabels();
-				}/*,
-				change: function(event, ui) {
-					console.log("in harmonicNumber change callback");
-					$(this).call('slide', {event: event, ui: ui});
-				}*/
+				}
 			});
 			$("#harmonic-seq").buttonset();
 			$("#harmonic-mag").slider({
@@ -188,13 +183,6 @@
 					return 0;
 				}
 			}
-
-			/*$(".ui-slider").each(function() {
-				$(this).bind("slide", function(event, ui) {
-					console.log("in bound callback to update from processing");
-					Processing.data.change = true;
-				})
-			});*/
 
 			$('.ui-slider').mousewheel(function(event, delta, deltaX, deltaY) {
                 var element = $(this);
