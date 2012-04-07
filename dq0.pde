@@ -202,6 +202,8 @@ void draw() {
     
     updateValues();
 
+    updateLabels(); // implemented in JavaScript
+
     background(0);
     textFont(font);
     fill(white);

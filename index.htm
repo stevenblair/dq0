@@ -58,7 +58,7 @@
 				orientation: "vertical",
 				slide: function(event, ui) {
 					Processing.data.posMag = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 			$("#pos-phase").slider({
@@ -70,7 +70,7 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.posPhase = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 			$("#neg-mag").slider({
@@ -82,7 +82,7 @@
 				orientation: "vertical",
 				slide: function(event, ui) {
 					Processing.data.negMag = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 			$("#neg-phase").slider({
@@ -94,7 +94,7 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.negPhase = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 			$("#zero-mag").slider({
@@ -106,7 +106,7 @@
 				orientation: "vertical",
 				slide: function(event, ui) {
 					Processing.data.zeroMag = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 			$("#zero-phase").slider({
@@ -118,7 +118,7 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.zeroPhase = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 
@@ -131,7 +131,7 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.harmonicNumber = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 			$("#harmonic-seq").buttonset();
@@ -144,7 +144,7 @@
 				orientation: "vertical",
 				slide: function(event, ui) {
 					Processing.data.harmonicMag = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 			$("#harmonic-phase").slider({
@@ -156,7 +156,7 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.harmonicPhase = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 			$("#theta").slider({
@@ -168,7 +168,7 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.theta = ui.value;
-					updateLabels();
+					Processing.data.change = true;
 				}
 			});
 
@@ -191,7 +191,7 @@
                 var min = element.slider('option', 'min');
                 var max = element.slider('option', 'max');
 
-                // if slider deals with non-integer values, 
+                // if slider deals with non-integer values, increase step size
                 if (step < 1.0) {
                 	step = (max - min) / (100.0 / Processing.data.SCROLL_PERCENT);
                 }
@@ -237,8 +237,7 @@
 					setZeroColour();
 				}
 
-				updateLabels();
-				//Processing.data.change = true;
+				Processing.data.change = true;
 			});
 
 			$("#dq0-type").click(function() {
@@ -252,8 +251,7 @@
 					Processing.data.dq0Type = 2;
 				}
 
-				updateLabels();
-				//Processing.data.change = true;
+				Processing.data.change = true;
 			});
 
 			$("#theta-type").click(function() {
@@ -266,7 +264,7 @@
 					showTheta();
 				}
 
-				updateLabels();
+				Processing.data.change = true;
 			});
 
 			$("#info-button").mouseenter(function() {
@@ -294,8 +292,6 @@
 			$("#harmonic-number-label").html("harmonic number: " + Processing.data.harmonicNumber);
 			$("#harmonic-mag-phase-label").html("harmonic: " + (Processing.data.harmonicMag).toFixed(2) + " &#8736; " + (Processing.data.harmonicPhase).toFixed(2) + "&deg;");
 			$("#theta-label").html("&theta;: " + (Processing.data.theta).toFixed(2) + "&deg;");
-			
-			Processing.data.change = true;
 		}
 
 		function setZeroColour() {
@@ -354,9 +350,9 @@
 				showTheta();
 			}
 
-			//Processing.data.change = true;
+			Processing.data.change = true;
 
-			updateLabels();
+			//updateLabels();
 		}
 
 		function resetData() {
@@ -370,7 +366,7 @@
 				zeroPhase: 0.0,
 				harmonicNumber: 3,
 				harmonicSeq: 1,
-				harmonicMag: 0.3,
+				harmonicMag: 0.0,
 				harmonicPhase: 0.0,
 				dq0Type: 0,
 				thetaType: 0,
