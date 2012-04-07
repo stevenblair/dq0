@@ -19,6 +19,7 @@
 		<script src="js/processing-1.3.6.min.js"></script>
 		<script src="js/jquery-1.7.1.min.js"></script>
 		<script src="js/jquery-ui-1.8.14.custom.min.js"></script>
+		<script src="js/jquery.mousewheel.js"></script>
 		<script type="text/javascript">
 		/**
 		 * Visualisation of dq0 transform
@@ -129,9 +130,14 @@
 				step: 1.0,
 				orientation: "horizontal",
 				slide: function(event, ui) {
+					console.log("in harmonicNumber slide callback, value: ", ui.value);
 					Processing.data.harmonicNumber = ui.value;
 					updateLabels();
-				}
+				}/*,
+				change: function(event, ui) {
+					console.log("in harmonicNumber change callback");
+					$(this).call('slide', {event: event, ui: ui});
+				}*/
 			});
 			$("#harmonic-seq").buttonset();
 			$("#harmonic-mag").slider({
@@ -171,10 +177,53 @@
 				}
 			});
 
-			$(".ui-slider").each(function() {
+			function sign(delta) {
+				if (delta > 0) {
+					return 1;
+				}
+				else if (delta < 0) {
+					return -1;
+				}
+				else {
+					return 0;
+				}
+			}
+
+			/*$(".ui-slider").each(function() {
 				$(this).bind("slide", function(event, ui) {
+					console.log("in bound callback to update from processing");
 					Processing.data.change = true;
 				})
+			});*/
+
+			$('.ui-slider').mousewheel(function(event, delta, deltaX, deltaY) {
+                var element = $(this);
+                var value = element.slider('option', 'value');
+                var step = element.slider('option', 'step');
+                var min = element.slider('option', 'min');
+                var max = element.slider('option', 'max');
+
+                // if slider deals with non-integer values, 
+                if (step < 1.0) {
+                	step = (max - min) / (100.0 / Processing.data.SCROLL_PERCENT);
+                }
+
+                var newValue = value + step * sign(delta);
+
+                if (newValue < min) {
+                	newValue = min;
+                }
+
+                if (newValue > max) {
+                	newValue = max;
+                }
+
+				element.slider("option", "value", newValue);
+                element.slider("option", "slide").call(element, null, { value: newValue });
+
+				Processing.data.change = true;
+
+                return false;
 			});
 
 			$("#dq0-type").buttonset();
@@ -201,7 +250,7 @@
 				}
 
 				updateLabels();
-				Processing.data.change = true;
+				//Processing.data.change = true;
 			});
 
 			$("#dq0-type").click(function() {
@@ -216,7 +265,7 @@
 				}
 
 				updateLabels();
-				Processing.data.change = true;
+				//Processing.data.change = true;
 			});
 
 			$("#theta-type").click(function() {
@@ -230,7 +279,6 @@
 				}
 
 				updateLabels();
-				Processing.data.change = true;
 			});
 
 			$("#info-button").mouseenter(function() {
@@ -252,12 +300,14 @@
 
 
 		function updateLabels() {
-			$("#pos-label").html("pos seq: " + Processing.data.posMag + " &#8736; " + Processing.data.posPhase + "&deg;");
-			$("#neg-label").html("neg seq: " + Processing.data.negMag + " &#8736; " + Processing.data.negPhase + "&deg;");
-			$("#zero-label").html("zero seq: " + Processing.data.zeroMag + " &#8736; " + Processing.data.zeroPhase + "&deg;");
+			$("#pos-label").html("pos seq: " + (Processing.data.posMag).toFixed(2) + " &#8736; " + (Processing.data.posPhase).toFixed(2) + "&deg;");
+			$("#neg-label").html("neg seq: " + (Processing.data.negMag).toFixed(2) + " &#8736; " + (Processing.data.negPhase).toFixed(2) + "&deg;");
+			$("#zero-label").html("zero seq: " + (Processing.data.zeroMag).toFixed(2) + " &#8736; " + (Processing.data.zeroPhase).toFixed(2) + "&deg;");
 			$("#harmonic-number-label").html("harmonic number: " + Processing.data.harmonicNumber);
-			$("#harmonic-mag-phase-label").html("harmonic: " + Processing.data.harmonicMag + " &#8736; " + Processing.data.harmonicPhase + "&deg;");
-			$("#theta-label").html("&theta;: " + Processing.data.theta + "&deg;");
+			$("#harmonic-mag-phase-label").html("harmonic: " + (Processing.data.harmonicMag).toFixed(2) + " &#8736; " + (Processing.data.harmonicPhase).toFixed(2) + "&deg;");
+			$("#theta-label").html("&theta;: " + (Processing.data.theta).toFixed(2) + "&deg;");
+			
+			Processing.data.change = true;
 		}
 
 		function setZeroColour() {
@@ -316,13 +366,14 @@
 				showTheta();
 			}
 
-			Processing.data.change = true;
+			//Processing.data.change = true;
 
 			updateLabels();
 		}
 
 		function resetData() {
 			Processing.data = {
+				SCROLL_PERCENT: 5.0,
 				posMag: 1.0,
 				posPhase: 0.0,
 				negMag: 0.0,
@@ -331,7 +382,7 @@
 				zeroPhase: 0.0,
 				harmonicNumber: 3,
 				harmonicSeq: 1,
-				harmonicMag: 0.0,
+				harmonicMag: 0.3,
 				harmonicPhase: 0.0,
 				dq0Type: 0,
 				thetaType: 0,
