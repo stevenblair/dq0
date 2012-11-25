@@ -214,13 +214,13 @@ void draw() {
 
     color harmonicColour;
 
-    if (harmonicSeq == 1) {
+    if (harmonicSeq == POS_SEQ) {
       harmonicColour = posColor;
     }
-    else if (harmonicSeq == 2) {
+    else if (harmonicSeq == NEG_SEQ) {
       harmonicColour = negColor;
     }
-    else if (harmonicSeq == 0) {
+    else if (harmonicSeq == ZERO_SEQ) {
       harmonicColour = zeroColor;
     }
 
@@ -238,15 +238,15 @@ void draw() {
         theta = thetaFixed;
       }
 
-      if (dq0Type == 0) {
+      if (dq0Type == DQ0_TYPE_MATLAB) {
         d[t] = (2.0 / 3.0) * (Va[t] * sin(theta) + Vb[t] * sin(theta - TWO_PI_OVER_THREE) + Vc[t] * sin(theta + TWO_PI_OVER_THREE));
         q[t] = (2.0 / 3.0) * (Va[t] * cos(theta) + Vb[t] * cos(theta - TWO_PI_OVER_THREE) + Vc[t] * cos(theta + TWO_PI_OVER_THREE));
       }
-      else if (dq0Type == 1) {
+      else if (dq0Type == DQ0_TYPE_CLASSIC) {
         d[t] = (2.0 / 3.0) * (Va[t] * cos(theta) + Vb[t] * cos(theta - TWO_PI_OVER_THREE) + Vc[t] * cos(theta + TWO_PI_OVER_THREE));
         q[t] = (2.0 / 3.0) * (Va[t] * -sin(theta) + Vb[t] * -sin(theta - TWO_PI_OVER_THREE) + Vc[t] * -sin(theta + TWO_PI_OVER_THREE));
       }
-      else if (dq0Type == 2) {
+      else if (dq0Type == DQ0_TYPE_WIKIPEDIA) {
         d[t] = (2.0 / 3.0) * (Va[t] * cos(theta) + Vb[t] * cos(theta - TWO_PI_OVER_THREE) + Vc[t] * cos(theta + TWO_PI_OVER_THREE));
         q[t] = (2.0 / 3.0) * (Va[t] * sin(theta) + Vb[t] * sin(theta - TWO_PI_OVER_THREE) + Vc[t] * sin(theta + TWO_PI_OVER_THREE));
       }
