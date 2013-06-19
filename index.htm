@@ -125,6 +125,9 @@
 				orientation: "horizontal",
 				slide: function(event, ui) {
 					Processing.data.harmonicNumber = ui.value;
+					
+					setHarmonicSeq();
+					setAllSliders();
 				}
 			});
 			$("#harmonic-seq").buttonset();
@@ -302,6 +305,11 @@
 			$("#harmonic-mag .ui-slider-range, #harmonic-phase .ui-slider-range").removeClass("zeroColour").removeClass("posColour").addClass("negColour");
 		}
 
+		function setHarmonicSeq() {
+			// set the harmonic sequence to the normal setting for this harmonic number
+			Processing.data.harmonicSeq = Processing.data.harmonicNumber % 3;
+		}
+
 		function setAllSliders() {
 			$("#pos-mag").slider("value", Processing.data.posMag);
 			$("#pos-phase").slider("value", Processing.data.posPhase);
@@ -313,6 +321,8 @@
 			$("#harmonic-mag").slider("value", Processing.data.harmonicMag);
 			$("#harmonic-phase").slider("value", Processing.data.harmonicPhase);
 			$("#theta").slider("value", Processing.data.theta);
+
+			setHarmonicSeq();
 
 			if (Processing.data.harmonicSeq == 0) {
 				$("#zero").attr('checked', true).button("refresh");
