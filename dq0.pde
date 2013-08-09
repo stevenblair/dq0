@@ -127,7 +127,7 @@ float harmonic(float wt, int phaseNumber) {
   return harmonicMag * sin(wt * harmonicNumber + harmonicPhase + seqAngle);
 }
 
-void drawPhasors(float m, float ang, int x, int y, color c, boolean zeroSequence) {
+void drawPhasors(float m, float ang, int x, int y, color c, int sequence) {
   // draw axes
   stroke(50);
   strokeWeight(2);
@@ -138,12 +138,20 @@ void drawPhasors(float m, float ang, int x, int y, color c, boolean zeroSequence
 
   for (int j = 0; j < 3; j++) {
     // shift phases B and C by 120deg (-/+ respectively)
-    if (zeroSequence == false) {
+    if (sequence == POS_SEQ) {
       if (j == 1) {
         ang -= radians(120);
       }
       else if (j == 2) {
         ang += radians(240);
+      }
+    }
+    else if (sequence == NEG_SEQ) {
+      if (j == 1) {
+        ang += radians(120);
+      }
+      else if (j == 2) {
+        ang -= radians(240);
       }
     }
 
@@ -208,9 +216,9 @@ void draw() {
     textFont(font);
     fill(white);
 
-    drawPhasors(posMag, posPhase, PHASORS_START_X, PHASORS_START_Y, posColor, false);
-    drawPhasors(negMag, negPhase, PHASORS_START_X, PHASORS_START_Y + 125, negColor, false);
-    drawPhasors(zeroMag, zeroPhase, PHASORS_START_X, PHASORS_START_Y + 250, zeroColor, true);
+    drawPhasors(posMag, posPhase, PHASORS_START_X, PHASORS_START_Y, posColor, POS_SEQ);
+    drawPhasors(negMag, negPhase, PHASORS_START_X, PHASORS_START_Y + 125, negColor, NEG_SEQ);
+    drawPhasors(zeroMag, zeroPhase, PHASORS_START_X, PHASORS_START_Y + 250, zeroColor, ZERO_SEQ);
 
     color harmonicColour;
 
@@ -224,7 +232,7 @@ void draw() {
       harmonicColour = zeroColor;
     }
 
-    drawPhasors(harmonicMag, harmonicPhase, PHASORS_START_X, PHASORS_START_Y + 450, harmonicColour, false);
+    drawPhasors(harmonicMag, harmonicPhase, PHASORS_START_X, PHASORS_START_Y + 450, harmonicColour, harmonicSeq);
 
     // compute input waveforms at each time-step
     for (int t = 0; t < ITERATIONS; t++) {
